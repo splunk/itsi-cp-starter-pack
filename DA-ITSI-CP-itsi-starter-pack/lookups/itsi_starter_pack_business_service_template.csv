@@ -1,0 +1,13 @@
+Service Title,Dependent Service,Service Template Link,Service Tags
+ITSI Starter Pack Business Service Example Tree,Business Service Name,,itsi_starter_pack
+Business Service Name,Vital Business Function 1,Business Service Template,itsi_starter_pack
+Business Service Name,Vital Business Function 2,Business Service Template,itsi_starter_pack
+Business Service Name,Vital Business Function 3,Business Service Template,itsi_starter_pack
+Vital Business Function 1,VBF1 - Application Health,Vital Business Function Service Template,itsi_starter_pack
+Vital Business Function 2,VBF2 - Application Health,Vital Business Function Service Template,itsi_starter_pack
+Vital Business Function 3,VBF3 - Application Health,Vital Business Function Service Template,itsi_starter_pack
+VBF1 - Application Health,,Application Service Template,itsi_starter_pack
+VBF2 - Application Health,,Application Service Template,itsi_starter_pack
+VBF3 - Application Health,,Application Service Template,itsi_starter_pack
+Business Service Name,Infrastructure Health,,itsi_starter_pack
+Infrastructure Health,,Infrastructure Health Service Template,itsi_starter_pack

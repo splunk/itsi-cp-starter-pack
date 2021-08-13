@@ -1,0 +1,5 @@
+Service Title,Dependent Service,Service Template Link,Service Tags
+ITSI Starter Pack Three Tier Example,Front End,,itsi_starter_pack
+Front End,Application,Front End Service Template,itsi_starter_pack
+Application,Database,Application Service Template,itsi_starter_pack
+Database,,Database Service Template,itsi_starter_pack
