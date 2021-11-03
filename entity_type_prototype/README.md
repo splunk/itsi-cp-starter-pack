@@ -20,9 +20,8 @@ Before building a custom entity type with this code, the following prerequisites
 3. The itsi-cp-starter-pack is installed into the environment. See the [Starter Pack README](../README.md) for how to install
 
 ### Step 1 - Run the python command
-1. Ensure python3 is installed in your environment
-2. From a shell within the ./entity_type_prototype folder execute the following command
-3. python3 ./entity_prototype_generator.py "YOUR ENTITY TYPE DISPLAY NAME" "YOUR ENTITY TYPE ID" https://theURIOfYourSplunkInstance admin adminpassword
+1. From a shell within the ./entity_type_prototype folder execute the following command
+2. python3 ./entity_prototype_generator.py "YOUR ENTITY TYPE DISPLAY NAME" "YOUR ENTITY TYPE ID" https://theURIOfYourSplunkInstance admin adminpassword
 
 ### Step 2 - Manually install the newly generated DA-ITSI-CP-* App
 1. Review the output from the python command above... it should indicate success and the name of the new DA-ITSI-CP app
