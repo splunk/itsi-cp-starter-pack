@@ -29,14 +29,15 @@ To get a new entity type created, follow the below high level steps:
 
 
 Example shell commands and output to build a new entity type
-`
-> git clone git@github.com:splunk/itsi-cp-starter-pack.git
-> cd itsi-cp-starter-pack/entity_type_prototype/
-> python3 entity_prototype_generator.py "Splunk Server" "splunk_server" https://1.2.3.4 admin changeme
-`
+```
+git clone git@github.com:splunk/itsi-cp-starter-pack.git
+cd itsi-cp-starter-pack/entity_type_prototype/
+python3 entity_prototype_generator.py "Splunk Server" "splunk_server" https://1.2.3.4 admin changeme
+```
 
+Produces the following output code
 
-`
+```
   adding: DA-ITSI-CP-splunk_server2/ (stored 0%)
   adding: DA-ITSI-CP-splunk_server2/.DS_Store (deflated 94%)
   adding: DA-ITSI-CP-splunk_server2/bin/ (stored 0%)
@@ -62,4 +63,4 @@ Example shell commands and output to build a new entity type
 ***************************************************************************
     1. Manually install the DA-ITSI-CP add-on that was generated for this entity type located here: ./build/DA-ITSI-CP-splunk_server2.spl
     2. After step 1, follow the entity type build-out instructions here: /en-US/app/DA-ITSI-CP-splunk_server2/splunk_server2_overview
-`
+```
