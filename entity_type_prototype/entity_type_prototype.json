@@ -1,0 +1,44 @@
+{
+   "description":"",
+   "title":"ENTITY-TYPE-DISPLAY",
+   "data_drilldowns":[
+      {
+         "title":"All ENTITY-TYPE-DISPLAY Events",
+         "type":"events",
+         "static_filter":{
+            "type":"include",
+            "field":"`web_server_metrics_indexes`",
+            "values":[
+               "`web_server_metrics_indexes`"
+            ]
+         },
+         "entity_field_filter":{
+            "type":"entity",
+            "data_field":"host",
+            "entity_field":"host"
+         }
+      }
+   ],
+   "dashboard_drilldowns":[
+      {
+         "id":"ENTITY-TYPE-ID_overview",
+         "title":"ENTITY-TYPE-DISPLAY Overview",
+         "base_url":"",
+         "dashboard_type":"xml_dashboard",
+         "params":{
+            "static_params":{
+               
+            },
+            "alias_param_map":[
+               {
+                  "alias":"entity_title",
+                  "param":"form.entity_title"
+               }
+            ]
+         }
+      }],
+   "vital_metrics":[],
+   "object_type":"entity_type",
+   "identifying_name":"ENTITY-TYPE-ID",
+   "_key":"ENTITY-TYPE-ID"
+}

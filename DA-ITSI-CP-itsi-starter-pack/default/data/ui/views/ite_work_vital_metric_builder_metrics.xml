@@ -1,0 +1,149 @@
+<form>
+  <label>IT Essentials - Work Vital Metric Builder (Metric Index Data)</label>
+  <fieldset submitButton="false">
+    <input type="text" token="metric_filter">
+      <label>Metric Text Filter</label>
+      <prefix>*</prefix>
+      <suffix>*</suffix>
+      <default>*</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <viz type="dendrogram_viz.dendrogram_viz">
+        <search>
+          <query>| mcatalog values(metric_name) as metric_name where index=* by index
+| mvexpand metric_name
+| eval metric_name = index.".".metric_name, path=replace(metric_name, "\.", "/")
+| search path=$metric_filter$</query>
+          <earliest>-30d@d</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="dendrogram_viz.dendrogram_viz.color1">#171d21</option>
+        <option name="dendrogram_viz.dendrogram_viz.color2">#ffffff</option>
+        <option name="dendrogram_viz.dendrogram_viz.delimiter">/</option>
+        <option name="dendrogram_viz.dendrogram_viz.html">no</option>
+        <option name="dendrogram_viz.dendrogram_viz.label_size">10</option>
+        <option name="dendrogram_viz.dendrogram_viz.layout">vertical</option>
+        <option name="dendrogram_viz.dendrogram_viz.linkcolor">#555555</option>
+        <option name="dendrogram_viz.dendrogram_viz.max_rows">1000</option>
+        <option name="dendrogram_viz.dendrogram_viz.node_ancestor_spacing">100</option>
+        <option name="dendrogram_viz.dendrogram_viz.node_sibling_spacing">30</option>
+        <option name="dendrogram_viz.dendrogram_viz.node_size">4</option>
+        <option name="dendrogram_viz.dendrogram_viz.nodecolor">#999999</option>
+        <option name="dendrogram_viz.dendrogram_viz.radius">300</option>
+        <option name="dendrogram_viz.dendrogram_viz.tidy">yes</option>
+        <option name="dendrogram_viz.dendrogram_viz.zoom">yes</option>
+        <option name="drilldown">all</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <drilldown>
+          <set token="metric_fqdn">$dendrogram_viz_path$</set>
+        </drilldown>
+      </viz>
+    </panel>
+  </row>
+  <row depends="$foohideme$">
+    <panel>
+      <table>
+        <search>
+          <done>
+            <set token="form.form_metric_name">$result.metric_name$</set>
+          </done>
+          <query>| mcatalog values(metric_name) as metric_name where index=* by index
+| mvexpand metric_name
+| eval path = index.".".metric_name, path=replace(path, "\.", "/")
+| search path=$dendrogram_viz_path$
+| table index metric_name path</query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <input type="dropdown" token="entity_type">
+        <label>Entity Type</label>
+        <fieldForLabel>title</fieldForLabel>
+        <fieldForValue>identifying_name</fieldForValue>
+        <search>
+          <query>| rest splunk_server=local report_as=text servicesNS/nobody/itsi/itoa_interface/entity_type/
+| eval value=spath(value, "{}")
+| mvexpand value
+| eval title=spath(value, "title"), identifying_name=replace(spath(value, "identifying_name"), " ", "_")</query>
+        </search>
+      </input>
+      <input type="dropdown" token="form_metric_name">
+        <label>Metric</label>
+        <fieldForLabel>metric_name</fieldForLabel>
+        <fieldForValue>metric_name</fieldForValue>
+        <search>
+          <query>|mcatalog values(metric_name) as metric_name where index=*
+| mvexpand metric_name
+| dedup metric_name</query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+      </input>
+      <input type="dropdown" token="index_macro">
+        <label>Index Macro</label>
+        <allowCustomValues>true</allowCustomValues>
+        <default>itsi_entity_type_$entity_type$_metrics_indexes</default>
+        <fieldForLabel>title</fieldForLabel>
+        <fieldForValue>title</fieldForValue>
+        <search>
+          <query>| rest /servicesNS/-/-/admin/macros count=0 splunk_server=local
+| search definition="index*=*" title=*index*
+| search (NOT definition IN ("_internal", "_audit"))
+| table title definition
+| dedup title</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <input type="dropdown" token="entity_split_by" searchWhenChanged="true">
+        <label>Entity Split By Field</label>
+        <fieldForLabel>dims</fieldForLabel>
+        <fieldForValue>dims</fieldForValue>
+        <search>
+          <query>| mcatalog values(_dims) as dims where index=* metric_name="$form_metric_name$" by index, metric_name
+| mvexpand dims
+| dedup dims</query>
+        </search>
+        <choice value="host">host</choice>
+        <choice value="source">source</choice>
+        <choice value="sourcetype">sourcetype</choice>
+      </input>
+      <html>
+      <h1>Suggested Index Macro Name</h1>
+      <code>itsi_entity_type_$entity_type$_metrics_indexes</code>
+      <br/>
+      <h1>Suggested Vital Metric SPL</h1>
+      <code>| mstats avg(_value) as val where `$index_macro$` metric_name="$form_metric_name$" by $entity_split_by$ span=1m</code>
+    </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Vital Metric Preview</title>
+      <table>
+        <search>
+          <query>| mstats avg(_value) as val where `$index_macro$` metric_name="$form_metric_name$" by $entity_split_by$ span=1m
+
+| stats sparkline(avg(val), 1m) as Trend latest(val) as "Latest Value" by $entity_split_by$
+| eval "Latest Value"=round('Latest Value', 2)</query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>

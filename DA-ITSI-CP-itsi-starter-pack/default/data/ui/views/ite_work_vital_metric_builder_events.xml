@@ -1,0 +1,103 @@
+<form>
+  <label>IT Essentials - Work Vital Metric Builder (Event Index Data)</label>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="entity_type">
+      <label>Entity Type</label>
+      <fieldForLabel>title</fieldForLabel>
+      <fieldForValue>identifying_name</fieldForValue>
+      <search>
+        <query>| rest splunk_server=local report_as=text servicesNS/nobody/itsi/itoa_interface/entity_type/
+| eval value=spath(value, "{}")
+| mvexpand value
+| eval title=spath(value, "title"), identifying_name=replace(spath(value, "identifying_name"), " ", "_")</query>
+      </search>
+    </input>
+    <input type="dropdown" token="index_macro">
+      <label>Index Macro</label>
+      <allowCustomValues>true</allowCustomValues>
+      <default>itsi_entity_type_$entity_type$_events_indexes</default>
+      <fieldForLabel>title</fieldForLabel>
+      <fieldForValue>title</fieldForValue>
+      <search>
+        <query>| rest /servicesNS/-/-/admin/macros count=0 splunk_server=local
+| search definition="index*=*" title=*index*
+| search (NOT definition IN ("_internal", "_audit"))
+| table title definition
+| dedup title</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+    <input type="text" token="search_filter">
+      <label>Arbitrary Search Filter</label>
+    </input>
+    <input type="dropdown" token="function">
+      <label>Function</label>
+      <search>
+        <query/>
+        <earliest>0</earliest>
+        <latest></latest>
+      </search>
+      <choice value="count">count</choice>
+      <choice value="dc">distinct count</choice>
+      <choice value="avg">average</choice>
+      <choice value="max">maximum</choice>
+      <choice value="min">minimum</choice>
+      <initialValue>avg</initialValue>
+    </input>
+    <input type="dropdown" token="function_field" searchWhenChanged="true">
+      <label>Function Field</label>
+      <fieldForLabel>field</fieldForLabel>
+      <fieldForValue>field</fieldForValue>
+      <search>
+        <query>| search `$index_macro$` $search_filter$
+| fieldsummary maxvals=3
+| search (NOT field="field")
+| table field</query>
+      </search>
+    </input>
+    <input type="dropdown" token="entity_split_by" searchWhenChanged="true">
+      <label>Entity Split By Field</label>
+      <fieldForLabel>field</fieldForLabel>
+      <fieldForValue>field</fieldForValue>
+      <search>
+        <query>| search `$index_macro$` $search_filter$
+| fieldsummary maxvals=3
+| search (NOT field="field")
+| table field</query>
+      </search>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <html>
+      <h1>Suggested Index Macro Name</h1>
+      <code>itsi_entity_type_$entity_type$_events_indexes</code>
+      <br/>
+      <h1>Suggested Vital Metric SPL</h1>
+      <pre>| search `$index_macro$` $search_filter$
+| bin _time span=1m
+| stats $function$($function_field$) as val by _time $entity_split_by$</pre>
+    </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Vital Metric Preview</title>
+      <table>
+        <search>
+          <query>| search `$index_macro$` $search_filter$
+| bin _time span=1m
+| stats $function$($function_field$) as val by _time $entity_split_by$
+
+| stats sparkline(avg(val), 1m) as Trend latest(val) as "Latest Value" by $entity_split_by$
+| eval "Latest Value"=round('Latest Value', 2)</query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>

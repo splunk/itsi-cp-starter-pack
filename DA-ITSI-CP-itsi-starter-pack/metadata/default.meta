@@ -6,6 +6,17 @@ modtime = 1628875449.574946000
 version = 8.0.5
 modtime = 1628875449.578176000
 
+[views/ite_work_vital_metric_builder_events]
+export = system
+owner = admin
+version = 8.0.5
+
+[views/ite_work_vital_metric_builder_metrics]
+export = system
+owner = admin
+version = 8.0.5
+
+
 [macros/itsi_starter_pack_get_example_entity_data]
 export = system
 owner = admin

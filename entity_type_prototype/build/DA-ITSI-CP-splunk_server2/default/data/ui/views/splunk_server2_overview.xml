@@ -1,0 +1,44 @@
+<form>
+  <label>Splunk Server2 Overview</label>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="entity_title">
+      <label>Splunk Server2</label>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <html>
+      Oh hello there! It seems you've found the entity overview dashboard of the new entity type you are creating. This dashboard is the primary entity overview dashboard users will see when they drill into an entity from the infrastructure overview screen. So, make sure it doesn't suck. Once you are comfortable with building the entity type, you can remove this HTML panel and update the overview dashboard to contain all of the necessary and desired panels for an overview of this entity type.
+
+      <br/>
+
+      Please complete ALL of the following steps to complete the build out of this entity
+      <ul>
+        <li>Review your newly created entity type by visiting the <a target="_blank" href="/app/itsi/entities_lister?tab=entityTypes">entity type lister page</a></li>
+        <li>Populate <a target="_blank" href="/manager/DA-ITSI-CP-splunk_server2/admin/macros">the index macros</a> for this entity type and NEVER hardcode index names in searches. ALWAYS reference index macros</li>
+        <li>Update the template <a target="_blank" href="/manager/DA-ITSI-CP-splunk_server2/saved/searches?app=DA-ITSI-CP-splunk_server2">entity discovery search</a> for this entity type to ensure that the gizmos and gadgets found in the data can be automatically discovered for this entity type. Remember USE INDEX MACROS. Don't hardcode indexes</li>
+        <li>Test your entity discovery search via <a target="_blank" href="/app/itsi/service_importer?importType=search">this entity import wizard</a>. If it doesn't find your entities, it's broke!</li>
+        <li><a target="_blank" href="/app/DA-ITSI-CP-splunk_server2/splunk_server2_overview/edit">Make edits and updates to this here overview dashboard</a>, and test that the drilldown from the entity type populates dashboards panels and passes tokens as you'd expect</li>
+        <li>Build about 3 extremely meaningful vital metrics for this entity type. What are the top 3 "metrics" about each entity administrators would want to see? Please use this handy dandy <a target="_blank" href="/app/DA-ITSI-CP-itsi-starter-pack/ite_work_vital_metric_builder_metrics">metrics-based vital metric creation dashboard</a> or this handy dandy <a target="_blank" href="/app/DA-ITSI-CP-itsi-starter-pack/ite_work_vital_metric_builder_events">events-based vital metric creation dashboard</a> to obtain the SPL for your vital metric in the format that ITE-W expect it to be.</li>
+        <li>Marvel at your good work by viewing your entities in the <a target="_blank" href="/app/itsi/entity_overview?countPerPage=20&amp;earliest=-60m&amp;entityType=splunk_server2&amp;groupBy=type&amp;latest=now">infrastructure overview tab</a></li>
+      </ul> 
+    </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>EXAMPLE PANEL FOR DEMO PURPOSE ONLY</title>
+      <chart>
+        <search>
+          <query>`itsi_entity_type_splunk_server2_events_indexes` host=$entity_title$
+| timechart count span=1m by host</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+</form>

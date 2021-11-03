@@ -1,0 +1,68 @@
+# Application-level permissions
+
+[]
+access = read : [ * ], write : [ admin, power ]
+
+### EVENT TYPES
+
+[eventtypes]
+export = system
+
+
+### PROPS
+
+[props]
+export = system
+
+
+### TRANSFORMS
+
+[transforms]
+export = system
+
+
+### LOOKUPS
+
+[lookups]
+export = system
+
+
+### VIEWSTATES: even normal users should be able to create shared viewstates
+
+[viewstates]
+access = read : [ * ], write : [ * ]
+export = system
+
+[app/ui]
+version = 8.0.0
+modtime = 1575583787.740451000
+
+[app/launcher]
+version = 8.0.0
+modtime = 1575583787.742051000
+
+[macros/itsi_entity_type_ENTITY-TYPE-ID_events_indexes]
+export = system
+owner = admin
+version = 8.0.5
+modtime = 1635538282.661549000
+
+[macros/itsi_entity_type_ENTITY-TYPE-ID_metrics_indexes]
+export = system
+owner = admin
+version = 8.0.5
+modtime = 1635538318.956847000
+
+[views/ENTITY-TYPE-ID_overview]
+access = read : [ * ], write : [ admin, power ]
+export = system
+owner = admin
+version = 8.0.5
+modtime = 1635800658.121211000
+
+[savedsearches/IT%20Service%20Intelligence%20-%20ENTITY-TYPE-ID%20-%20Entity%20Discovery%20Search]
+access = read : [ * ], write : [ admin, power ]
+export = system
+owner = admin
+version = 8.0.5
+modtime = 1635539070.290043000
