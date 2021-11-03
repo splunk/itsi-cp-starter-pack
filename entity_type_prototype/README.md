@@ -13,6 +13,12 @@ To get a new entity type created, follow the below high level steps:
 3. Proceed on with the configuration of the entity type in your target Splunk instance
 
 
+## Prerequisites
+Before building a custom entity type with this code, the following prerequisites must be met
+1. git CLI installed
+2. python3 installed
+3. The itsi-cp-starter-pack is installed into the environment. See the [Starter Pack README](../README.md) for how to install
+
 ### Step 1 - Run the python command
 1. Ensure python3 is installed in your environment
 2. From a shell within the ./entity_type_prototype folder execute the following command
